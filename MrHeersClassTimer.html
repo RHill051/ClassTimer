@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Mr. Heer's Class Timer</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <style>
+        #remainingContainer {
+            font-size: 300px; /* This is the size for the big countdown timer text */
+            text-align: center;
+            color: green; 
+            font-weight: bold;
+        }        
+        
+        .timeWarning {
+            color: red; /* Color used for the big countdown timer when below selected warning threshold minute value */
+        }   
+        
+        #AddButtonsContainer {
+            display: none;
+            /*display: block;*/            
+        }
+                
+        button {
+            margin-right: 15px;
+            margin-top: 15px;
+            padding: 5px;
+        }
+        
+        #StartStopContainer button {
+            margin-top: 10px;
+        }
+        
+        .periodContainer {
+            margin-bottom: 10px;    
+        }        
+        
+        #DisplayControlsContainer {
+            margin-bottom: 20px;
+        }
+        
+        input {
+            margin-right: 20px;
+        }
+        
+        audio {            
+            display: none;
+        }
+        
+        #pauseAllAudio {
+            display: none;
+        }
+        
+        .configField {
+            margin-top: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .configField select {
+            margin-right: 15px;   
+        }
+    </style>
+</head>
+<body>   
+    <audio id="audioWarning" controls></audio>
+    <audio id="audioDayComplete" controls></audio>    
+    <div id="periodContainer">   
+        <div>
+            <button id="NormalDayButton" type="button">Normal Day</button>
+            <button id="EarlyReleaseButton" type="button">Early Release Day</button>
+            <button id="Delay2HourButton" type="button">2 Hour Delay Day</button>
+            <button id="SportsButton" type="button">Sports Day</button>
+        </div>
+        <div id="AddButtonsContainer">
+            <button id="AddHourButton" type="button">+ Hour</button>
+            <button id="SubtractHourButton" type="button">- Hour</button>
+            <button id="AddMinuteButton" type="button">+ Minute</button>            
+            <button id="SubtractMinuteButton" type="button">- Minute</button>
+        </div>        
+        <div class="periodContainer">
+            <span>Period #1 End:</span>
+            <input id="periodTime1" type="time">
+            <button id="AddHourButton1" type="button" class="addHourButton" data-index="1">+ Hour</button>
+            <button id="SubtractHourButton1" type="button" class="subtractHourButton" data-index="1">- Hour</button>
+            <button id="AddMinuteButton1" type="button" class="addMinuteButton" data-index="1">+ Minute</button>
+            <button id="SubtractMinuteButton1" type="button" class="subtractMinuteButton" data-index="1">- Minute</button>
+        </div>
+        <div class="periodContainer">
+            <span>Period #2 End:</span>
+            <input id="periodTime2" type="time">
+            <button id="AddHourButton2" type="button" class="addHourButton" data-index="2">+ Hour</button>
+            <button id="SubtractHourButton2" type="button" class="subtractHourButton" data-index="2">- Hour</button>
+            <button id="AddMinuteButton2" type="button" class="addMinuteButton" data-index="2">+ Minute</button>
+            <button id="SubtractMinuteButton2" type="button" class="subtractMinuteButton" data-index="2">- Minute</button>
+        </div>
+        <div class="periodContainer">
+            <span>Period #3 End:</span>
+            <input id="periodTime3" type="time">
+            <button id="AddHourButton3" type="button" class="addHourButton" data-index="3">+ Hour</button>
+            <button id="SubtractHourButton3" type="button" class="subtractHourButton" data-index="3">- Hour</button>
+            <button id="AddMinuteButton3" type="button" class="addMinuteButton" data-index="3">+ Minute</button>
+            <button id="SubtractMinuteButton3" type="button" class="subtractMinuteButton" data-index="3">- Minute</button>
+        </div>
+        <div class="periodContainer">
+            <span>Period #4 End:</span>
+            <input id="periodTime4" type="time">
+            <button id="AddHourButton4" type="button" class="addHourButton" data-index="4">+ Hour</button>
+            <button id="SubtractHourButton4" type="button" class="subtractHourButton" data-index="4">- Hour</button>
+            <button id="AddMinuteButton4" type="button" class="addMinuteButton" data-index="4">+ Minute</button>
+            <button id="SubtractMinuteButton4" type="button" class="subtractMinuteButton" data-index="4">- Minute</button>
+        </div>
+        <div class="periodContainer">
+            <span>Period #5 End:</span>
+            <input id="periodTime5" type="time">
+            <button id="AddHourButton5" type="button" class="addHourButton" data-index="5">+ Hour</button>
+            <button id="SubtractHourButton5" type="button" class="subtractHourButton" data-index="5">- Hour</button>
+            <button id="AddMinuteButton5" type="button" class="addMinuteButton" data-index="5">+ Minute</button>
+            <button id="SubtractMinuteButton5" type="button" class="subtractMinuteButton" data-index="5">- Minute</button>
+        </div>
+        <div class="periodContainer">
+            <span>Period #6 End:</span>
+            <input id="periodTime6" type="time">
+            <button id="AddHourButton6" type="button" class="addHourButton" data-index="6">+ Hour</button>
+            <button id="SubtractHourButton6" type="button" class="subtractHourButton" data-index="6">- Hour</button>
+            <button id="AddMinuteButton6" type="button" class="addMinuteButton" data-index="6">+ Minute</button>
+            <button id="SubtractMinuteButton6" type="button" class="subtractMinuteButton" data-index="6">- Minute</button>
+        </div>
+        <div class="periodContainer">
+            <span>Period #7 End:</span>
+            <input id="periodTime7" type="time">
+            <button id="AddHourButton7" type="button" class="addHourButton" data-index="7">+ Hour</button>
+            <button id="SubtractHourButton7" type="button" class="subtractHourButton" data-index="7">- Hour</button>
+            <button id="AddMinuteButton7" type="button" class="addMinuteButton" data-index="7">+ Minute</button>
+            <button id="SubtractMinuteButton7" type="button" class="subtractMinuteButton" data-index="7">- Minute</button>
+        </div>
+        <div class="periodContainer">
+            <span>Period #8 End:</span>
+            <input id="periodTime8" type="time">
+            <button id="AddHourButton8" type="button" class="addHourButton" data-index="8">+ Hour</button>
+            <button id="SubtractHourButton8" type="button" class="subtractHourButton" data-index="8">- Hour</button>
+            <button id="AddMinuteButton8" type="button" class="addMinuteButton" data-index="8">+ Minute</button>
+            <button id="SubtractMinuteButton8" type="button" class="subtractMinuteButton" data-index="8">- Minute</button>
+        </div>
+        <div class="configField">
+            <span>Warning Minutes:</span>
+            <select id="warningSelect">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+            </select>
+            <span>Audio Enabled:</span>
+            <input type="checkbox" id="audioEnabled" checked>
+        </div>        
+        <div id="StartStopContainer">
+            <button id="StartButton" type="button">Start Timer</button>
+            <button id="StopButton" type="button">Stop Timer</button>                
+            <button id="StopAudioButton" type="button">Stop Audio</button>   
+            <button id="ControlsDisplayButton" type="button">Show Timer</button>        
+        </div>        
+        <div>
+            <p>Current Time: <span id="currentTime"></span></p>
+            <p><span id="currentPeriodNumber"></span></p>
+            <p><span id="currentTimeRemaining"></span></p>                    
+        </div>
+    </div>   
+    <div id="remainingContainer">        
+        <p><span id="timeRemaining"></span></p>      
+        <img id="audioPlayingImage">
+    </div>                
+    <script>        
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////// Start Configurable values
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        var audioWarningStartSeconds = 3; // The number of seconds into the audio clip to start play.
+        var audioWarningDurationSeconds = 5; // The number of seconds to play the audio clip for.
+        var audioPeriodCompleteStartSeconds = 0; // The number of seconds into the audio clip to start play.
+        var audioPeriodCompleteDurationSeconds = 30; // The number of seconds to play the audio clip for.
+        var defaultWarningThresholdMinutes = 5; // Sets the Warning Threshold Minutes dropdown selected value on load of the page.
+        var doneText = "Done!";
+        var normalPeriodTime1 = "08:58"; // Period time in 24 hour hh:mm format. It must be 2 digit hour and 2 digit minute.
+        var normalPeriodTime2 = "09:50";
+        var normalPeriodTime3 = "10:42";
+        var normalPeriodTime4 = "11:31";
+        var normalPeriodTime5 = "12:49";
+        var normalPeriodTime6 = "13:41";
+        var normalPeriodTime7 = "14:33";
+        var normalPeriodTime8 = "15:25";
+        var earlyReleasePeriodTime1 = "08:55"; 
+        var earlyReleasePeriodTime2 = "09:44";
+        var earlyReleasePeriodTime3 = "10:33";
+        var earlyReleasePeriodTime4 = "10:58";
+        var earlyReleasePeriodTime5 = "12:13";
+        var earlyReleasePeriodTime6 = "13:02";
+        var earlyReleasePeriodTime7 = "13:51";
+        var earlyReleasePeriodTime8 = "14:55";
+        var delay2HoursPeriodTime1 = "10:40"; 
+        var delay2HoursPeriodTime2 = "11:14";
+        var delay2HoursPeriodTime3 = "12:20";
+        var delay2HoursPeriodTime4 = "12:54";
+        var delay2HoursPeriodTime5 = "13:43";
+        var delay2HoursPeriodTime6 = "14:17";
+        var delay2HoursPeriodTime7 = "14:51";
+        var delay2HoursPeriodTime8 = "15:25";
+        var sportsPeriodTime1 = "08:58"; 
+        var sportsPeriodTime2 = "09:50";
+        var sportsPeriodTime3 = "10:42";
+        var sportsPeriodTime4 = "11:34";
+        var sportsPeriodTime5 = "12:52";
+        var sportsPeriodTime6 = "13:44";
+        var sportsPeriodTime7 = "14:36";
+        var sportsPeriodTime8 = "15:25";
+        var AudioPlayingImgSrc = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Green_Bay_Packers_logo.svg/640px-Green_Bay_Packers_logo.svg.png";
+        var audioWarningSrc = "https://www.packernet.com/download/audio/GoPackGo.mp3";
+        var audioPeriodCompleteSrc = "https://bloximages.chicago2.vip.townnews.com/wiscnews.com/content/tncms/assets/v3/editorial/2/b1/2b1dd9ae-2997-11e0-a37c-001cc4c002e0/4d40989e43000.audio.mp3";        
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////// End Configurable values
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
+        var periodCounter = 1;
+        var periodTotalCount = 8;        
+        var timerInterval; 
+        var audioWarningPlayed = false;
+        var periodContainerSelector = "#periodContainer";
+        var periodTimeSelectorPrefix = "#periodTime";
+        var timeRemainingSelector = "#timeRemaining";
+        var currentTimeRemainingSelector = "#currentTimeRemaining";
+        var currentTimeSelector = "#currentTime";
+        var currentPeriodSelector = "#currentPeriodNumber";
+        var remainingContainerSelector = "#remainingContainer";           
+        var ControlsDisplayButtonSelector = "#ControlsDisplayButton";
+        var warningThresholdMinutesSelector = "#warningSelect";
+        var timeWarningClass = "timeWarning";        
+        var dataIndexAttribute = "data-index";
+        var audioWarningSelector = "#audioWarning";
+        var audioDayCompleteSelector = "#audioDayComplete";
+        var audioPlayingSelector = "#audioPlayingImage";
+        var audioEnabledSelector = "#audioEnabled";        
+        var dayMilliseconds = 86400000;
+        var hourMilliseconds = 3600000;
+        var minuteMilliseconds = 60000;
+        var secondMilliseconds = 1000;
+        var displayUpdateInterval = 100; // Update timer display every 0.1 seconds
+                
+        $(function () {                        
+            SetInitialDisplay();
+            
+            $(ControlsDisplayButtonSelector).click(function () {
+                ToggleControlsDisplay();
+            });    
+                        
+            $("#NormalDayButton").click(function () {
+                SetPeriodEndTimes();
+            });
+            
+            $("#EarlyReleaseButton").click(function () {
+                SetEarlyReleasePeriodEndTimes();
+            });
+            
+            $("#Delay2HourButton").click(function () {
+                Set2HourDelayPeriodEndTimes();
+            });
+            
+            $("#SportsButton").click(function () {
+                SetSportsPeriodEndTimes();
+            });
+                        
+            $("#AddHourButton").click(function () {
+                AddHour();
+            });
+            
+            $("#AddMinuteButton").click(function () {
+                AddMinute();
+            });
+            
+            $("#SubtractHourButton").click(function () {
+                SubtractHour();
+            });
+            
+            $("#SubtractMinuteButton").click(function () {
+                SubtractMinute();
+            });
+            
+            $(".addHourButton").click(function () {                
+                AddPeriodHour($(this).attr(dataIndexAttribute));
+            });           
+            
+            $(".subtractHourButton").click(function () {
+                SubtractPeriodHour($(this).attr(dataIndexAttribute));
+            });           
+            
+            $(".addMinuteButton").click(function () {
+                AddPeriodMinute($(this).attr(dataIndexAttribute));
+            });           
+            
+            $(".subtractMinuteButton").click(function () {
+                SubtractPeriodMinute($(this).attr(dataIndexAttribute));
+            });                       
+            
+            $("#StartButton").click(function () {
+                ToggleControlsDisplay();
+                StopTimer();                
+                StartTimer();
+            });
+
+            $("#StopButton").click(function () {
+                PauseAllAudio();
+                StopTimer();
+            });
+            
+            $(remainingContainerSelector).click(function () {
+                ToggleControlsDisplay();
+            });
+            
+            $("#StopAudioButton").click(function () {                
+                PauseAllAudio();
+            });                      
+        });
+        
+        function SetInitialDisplay() {
+            SetPeriodEndTimes();
+            SetCurrentTime();
+            $(remainingContainerSelector).hide();     
+            $(warningThresholdMinutesSelector).val(defaultWarningThresholdMinutes);
+            SetAudioSources();
+            SetImageSources();
+        }
+        
+        function SetImageSources() {            
+            $(audioPlayingSelector).attr("src", AudioPlayingImgSrc);
+        }
+        
+        function SetAudioSources() {
+            $(audioWarningSelector).attr("src", audioWarningSrc);
+            $(audioDayCompleteSelector).attr("src", audioPeriodCompleteSrc);
+        }
+        
+        function AddPeriodHour(index) {
+            var period = $(periodTimeSelectorPrefix + index);
+            var periodEndValues = period.val().split(":");
+            var endHour = parseInt(periodEndValues[0]) + 1;
+            var endMinute = periodEndValues[1];   
+
+            period.val(FormatHour(endHour) + ":" + endMinute);     
+        }
+        
+        function SubtractPeriodHour(index) {
+            var period = $(periodTimeSelectorPrefix + index);
+            var periodEndValues = period.val().split(":");
+            var endHour = parseInt(periodEndValues[0]) - 1;
+            var endMinute = periodEndValues[1];   
+
+            period.val(FormatHour(endHour) + ":" + endMinute);   
+        }
+        
+        function AddPeriodMinute(index) {
+            var period = $(periodTimeSelectorPrefix + index);
+            var periodEndValues = period.val().split(":");
+            var endHour = periodEndValues[0];
+            var endMinute = parseInt(periodEndValues[1]) + 1;   
+
+            period.val(endHour + ":" + FormatMinute(endMinute));       
+        }
+        
+        function SubtractPeriodMinute(index) {
+            var period = $(periodTimeSelectorPrefix + index);
+            var periodEndValues = period.val().split(":");
+            var endHour = periodEndValues[0];
+            var endMinute = parseInt(periodEndValues[1]) - 1;   
+
+            period.val(endHour + ":" + FormatMinute(endMinute));     
+        }
+        
+        function FormatHour(hour) {
+            if (hour > 23) {
+                hour = "00";
+            }
+            else if (hour <= 9 && hour >= 0) {
+                hour = "0" + hour;
+            }   
+            else if (hour < 0) {
+                hour = "23";
+            }
+            
+            return hour;
+        }        
+        
+        function FormatMinute(minute) {
+            if (minute > 59) {
+                    minute = "00";
+            }
+            else if (minute <= 9 && minute >= 0) {
+                minute = "0" + minute;
+            }      
+            else if (minute < 0) {
+                minute = "59";
+            }
+            
+            return minute;
+        }        
+        
+        function ToggleControlsDisplay()
+        {
+            if ($(periodContainerSelector).is(":visible")) {                
+                $(periodContainerSelector).hide();    
+                $(remainingContainerSelector).show();
+            }
+            else {                
+                $(periodContainerSelector).show();
+                $(remainingContainerSelector).hide();
+            }            
+        }
+        
+        function SetPeriodEndTimes() {
+            $(periodTimeSelectorPrefix + "1").val(normalPeriodTime1);
+            $(periodTimeSelectorPrefix + "2").val(normalPeriodTime2);
+            $(periodTimeSelectorPrefix + "3").val(normalPeriodTime3);
+            $(periodTimeSelectorPrefix + "4").val(normalPeriodTime4);
+            $(periodTimeSelectorPrefix + "5").val(normalPeriodTime5);
+            $(periodTimeSelectorPrefix + "6").val(normalPeriodTime6);
+            $(periodTimeSelectorPrefix + "7").val(normalPeriodTime7);
+            $(periodTimeSelectorPrefix + "8").val(normalPeriodTime8);
+        }
+        
+        function SetEarlyReleasePeriodEndTimes() {
+            $(periodTimeSelectorPrefix + "1").val(earlyReleasePeriodTime1);
+            $(periodTimeSelectorPrefix + "2").val(earlyReleasePeriodTime2);
+            $(periodTimeSelectorPrefix + "3").val(earlyReleasePeriodTime3);
+            $(periodTimeSelectorPrefix + "4").val(earlyReleasePeriodTime4);
+            $(periodTimeSelectorPrefix + "5").val(earlyReleasePeriodTime5);
+            $(periodTimeSelectorPrefix + "6").val(earlyReleasePeriodTime6);
+            $(periodTimeSelectorPrefix + "7").val(earlyReleasePeriodTime7);
+            $(periodTimeSelectorPrefix + "8").val(earlyReleasePeriodTime8);
+        }
+        
+        function Set2HourDelayPeriodEndTimes() {
+            $(periodTimeSelectorPrefix + "1").val(delay2HoursPeriodTime1);
+            $(periodTimeSelectorPrefix + "2").val(delay2HoursPeriodTime2);
+            $(periodTimeSelectorPrefix + "3").val(delay2HoursPeriodTime3);
+            $(periodTimeSelectorPrefix + "4").val(delay2HoursPeriodTime4);
+            $(periodTimeSelectorPrefix + "5").val(delay2HoursPeriodTime5);
+            $(periodTimeSelectorPrefix + "6").val(delay2HoursPeriodTime6);
+            $(periodTimeSelectorPrefix + "7").val(delay2HoursPeriodTime7);
+            $(periodTimeSelectorPrefix + "8").val(delay2HoursPeriodTime8);
+        }
+        
+        function SetSportsPeriodEndTimes() {
+            $(periodTimeSelectorPrefix + "1").val(sportsPeriodTime1);
+            $(periodTimeSelectorPrefix + "2").val(sportsPeriodTime2);
+            $(periodTimeSelectorPrefix + "3").val(sportsPeriodTime3);
+            $(periodTimeSelectorPrefix + "4").val(sportsPeriodTime4);
+            $(periodTimeSelectorPrefix + "5").val(sportsPeriodTime5);
+            $(periodTimeSelectorPrefix + "6").val(sportsPeriodTime6);
+            $(periodTimeSelectorPrefix + "7").val(sportsPeriodTime7);
+            $(periodTimeSelectorPrefix + "8").val(sportsPeriodTime8);
+        }
+        
+        function AddHour() {                     
+            for (var periodNumber = 1; periodNumber <= periodTotalCount; periodNumber++)
+            {   
+                var period = $(periodTimeSelectorPrefix + periodNumber);
+                var periodEndValues = period.val().split(":");
+                var endHour = parseInt(periodEndValues[0]) + 1;
+                var endMinute = periodEndValues[1];   
+                
+                period.val(FormatHour(endHour) + ":" + endMinute);                        
+            }            
+        }
+        
+        function AddMinute() {                     
+            for (var periodNumber = 1; periodNumber <= periodTotalCount; periodNumber++)
+            {   
+                var period = $(periodTimeSelectorPrefix + periodNumber);
+                var periodEndValues = period.val().split(":");
+                var endHour = periodEndValues[0];
+                var endMinute = parseInt(periodEndValues[1]) + 1;   
+                          
+                period.val(endHour + ":" + FormatMinute(endMinute));                        
+            }            
+        }
+        
+        function SubtractHour() {                     
+            for (var periodNumber = 1; periodNumber <= periodTotalCount; periodNumber++)
+            {   
+                var period = $(periodTimeSelectorPrefix + periodNumber);
+                var periodEndValues = period.val().split(":");
+                var endHour = parseInt(periodEndValues[0]) - 1;
+                var endMinute = periodEndValues[1];   
+                
+                period.val(FormatHour(endHour) + ":" + endMinute);                        
+            }            
+        }
+        
+        function SubtractMinute() {                     
+            for (var periodNumber = 1; periodNumber <= periodTotalCount; periodNumber++)
+            {   
+                var period = $(periodTimeSelectorPrefix + periodNumber);
+                var periodEndValues = period.val().split(":");
+                var endHour = periodEndValues[0];
+                var endMinute = parseInt(periodEndValues[1]) - 1;   
+                          
+                period.val(endHour + ":" + FormatMinute(endMinute));                        
+            }            
+        }
+
+        function SetCurrentTime() {
+            var currentTimeInterval = setInterval(function () {                            
+                    $(currentTimeSelector).html((new Date()).toLocaleTimeString());                    
+                }, displayUpdateInterval);            
+        }
+        
+        function StartTimer() {
+            if (periodCounter <= periodTotalCount) {
+                audioWarningPlayed = false;
+                $(timeRemainingSelector).removeClass(timeWarningClass);
+                $(remainingContainerSelector).show();                
+                $(currentPeriodSelector).html("Current Period: #" + periodCounter);                
+                var periodEndValues = $(periodTimeSelectorPrefix + periodCounter).val().split(":", 2);
+                var endHour = periodEndValues[0];
+                var endMinute = periodEndValues[1];
+                var dateNow = new Date();
+                var deadline = new Date(dateNow.getFullYear(), dateNow.getMonth(), dateNow.getDate(), endHour, endMinute, 0, 0);
+
+                timerInterval = setInterval(function () {                        
+                    var currentDate = new Date();
+                    var currentTime = currentDate.getTime();                    
+                    var t = deadline - currentTime;
+                    var hours = Math.floor((t % (dayMilliseconds)) / (hourMilliseconds));
+                    var minutes = Math.floor((t % (hourMilliseconds)) / (minuteMilliseconds));
+                    var seconds = Math.floor((t % (minuteMilliseconds)) / 1000);
+                    var tenthSeconds = Math.floor((t % (secondMilliseconds)) / 100);
+                    
+                    var formattedTime = GetFormattedTime(hours, minutes, seconds, tenthSeconds);
+                    $(currentTimeRemainingSelector).html("Current Timer: " + formattedTime);
+                    var timeRemaining = $(timeRemainingSelector);
+                    timeRemaining.html(formattedTime);
+                                        
+                    if (hours == 0 && minutes < parseInt($(warningThresholdMinutesSelector).val())) {
+                        if (!audioWarningPlayed) {                                      
+                            PlayAudio(audioWarningSelector, audioWarningStartSeconds, audioWarningDurationSeconds);
+                            audioWarningPlayed = true;
+                        }
+                        
+                        timeRemaining.addClass(timeWarningClass);
+                    }                    
+
+                    if (t <= 0) {
+                        clearInterval(timerInterval);
+                        PlayAudio(audioDayCompleteSelector, audioPeriodCompleteStartSeconds, audioPeriodCompleteDurationSeconds);
+                        periodCounter++;
+                        
+                        if (periodCounter <= periodTotalCount) {
+                            StartTimer();
+                        }      
+                        else {                                                                                    
+                            ClearTimer();                            
+                        }
+                    }
+                }, displayUpdateInterval);
+            }
+        }
+        
+        function PlayAudio(audioSelector, startAtSeconds, playDurationSeconds) {
+            if(!$(audioEnabledSelector).is(":checked")) {
+                return;
+            }
+            
+            PauseAllAudio();
+            document.getElementById($(audioSelector).attr("id")).currentTime = startAtSeconds;
+            $(audioPlayingSelector).show();
+            $(timeRemainingSelector).hide();
+            $(audioSelector)[0].play();   
+                        
+            setTimeout(function () {    
+                PauseAllAudio();
+            }, playDurationSeconds * 1000);            
+        }
+        
+        function PauseAllAudio() {
+            $("audio").each(function(){
+                document.getElementById($(this).attr("id")).currentTime = 0;
+                $(this)[0].pause();
+            });  
+            
+            $(audioPlayingSelector).hide();
+            $(timeRemainingSelector).show();
+        }
+
+        function ClearTimer() {
+            clearInterval(timerInterval);
+            periodCounter = 1;
+            audioWarningPlayed = false;
+            $(currentPeriodSelector).html("");
+            $(currentTimeSelector).html("");
+            $(currentTimeRemainingSelector).html("");            
+            $(audioPlayingSelector).show();
+            $(timeRemainingSelector).hide();            
+        }
+        
+        function StopTimer() {
+            ClearTimer();            
+            $(remainingContainerSelector).hide();
+            $(timeRemainingSelector).html(doneText);
+            $(currentTimeRemainingSelector).html("");            
+        }
+
+        function GetFormattedTime(hour, minute, second, tenthSecond) {
+            if (hour < 0 || minute < 0 || second < 0 || tenthSecond < 0) {                 
+                return doneText;
+            }
+            
+            var formattedHour = hour;
+            var formattedMinute = minute;
+            var formattedSecond = second;
+                        
+            if (hour < 10) {
+                formattedHour = "0" + hour;
+            }
+            
+            if (minute < 10) {
+                formattedMinute = "0" + minute;
+            }
+            
+            if (second < 10) {
+                formattedSecond = "0" + second;
+            }
+
+            if (hour == 0 && minute == 0 && second < 30) {
+                return formattedMinute + ":" + formattedSecond + "." + tenthSecond;                    
+            }
+            else if (hour == 0) {
+                return formattedMinute + ":" + formattedSecond;                    
+            }
+            else {
+                return formattedHour + ":" + formattedMinute + ":" + formattedSecond;   
+            }            
+        }        
+    </script>
+</body>
+</html>
